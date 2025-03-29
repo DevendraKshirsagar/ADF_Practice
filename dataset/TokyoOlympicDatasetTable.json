@@ -1,0 +1,17 @@
+{
+	"name": "TokyoOlympicDatasetTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "tokyo",
+			"table": "athletes"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

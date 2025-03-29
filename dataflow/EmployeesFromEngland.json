@@ -1,0 +1,70 @@
+{
+	"name": "EmployeesFromEngland",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"name": "AzureSQLBankDB"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable4",
+						"type": "DatasetReference"
+					},
+					"name": "AzureEnglandRegionEmployee"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Customer_ID as string,",
+				"          Name as string,",
+				"          Surname as string,",
+				"          Gender as string,",
+				"          Age as string,",
+				"          Region as string,",
+				"          Job_Classification as string,",
+				"          Date_Joined as string,",
+				"          Balance as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> AzureSQLBankDB",
+				"AzureSQLBankDB select(mapColumn(",
+				"          Customer_ID,",
+				"          Region,",
+				"          Job_Classification,",
+				"          Date_Joined",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 filter(Region == \"England\") ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> AzureEnglandRegionEmployee"
+			]
+		}
+	}
+}
